@@ -21,6 +21,7 @@
           default = pkgs.mkShell {
             buildInputs = [
               pkgs.wrangler
+              pkgs.nodejs
             ];
           };
         };
