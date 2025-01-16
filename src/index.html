@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Init script</title>
+		<style>
+			html,
+			body {
+				padding: 0;
+				margin: 0;
+				min-height: 100vh;
+			}
+
+			body {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+
+				background-color: #fefefe;
+				color: #010101;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					background-color: #010101;
+					color: #fefefe;
+				}
+			}
+
+			pre {
+				margin: 0;
+				background-color: #121212;
+				border: 2px solid #232323;
+				padding: 10px;
+				border-radius: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<p>First, ensure curl is installed. If on a system that uses apt, use:</p>
+		<pre><code>sudo apt update && sudo apt install -yq curl</code></pre>
+		<p>To run the script:</p>
+		<pre><code>bash <(curl -L https://init.mattprovost.dev)</code></pre>
+	</body>
+</html>

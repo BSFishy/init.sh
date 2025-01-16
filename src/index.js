@@ -1,28 +1,5 @@
-/** @type {string} */
 import scriptContent from '../init.sh';
-
-/**
- * @param {string} str
- * @returns {string}
- */
-function dedent(str) {
-	let indent = Infinity;
-	const lines = str.split('\n');
-	for (const line of lines) {
-		if (/^\W*$/m.test(line)) {
-			continue;
-		}
-
-		const match = /^\W*/m.exec(line);
-		if (!match) {
-			continue;
-		}
-
-		indent = Math.min(indent, match[0].length);
-	}
-
-	return lines.map((line) => line.substring(indent)).join('\n');
-}
+import pageContent from './index.html';
 
 export default {
 	/**
@@ -39,21 +16,13 @@ export default {
 		if (isCurl) {
 			message = scriptContent;
 		} else {
-			message = dedent(`
-				If on Ubuntu, make sure curl is installed:
-
-				sudo apt update && sudo apt install -yq curl
-
-				To install, run:
-
-				bash <(curl -L https://init.mattprovost.dev)
-			`);
+			message = pageContent;
 		}
 
 		return new Response(message, {
 			status: 200,
 			headers: {
-				'Content-Type': 'text/plain',
+				'Content-Type': isCurl ? 'text/plain' : 'text/html',
 			},
 		});
 	},
