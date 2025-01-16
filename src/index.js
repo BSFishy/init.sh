@@ -1,3 +1,26 @@
+/**
+ * @param {string} str
+ * @returns {string}
+ */
+function dedent(str) {
+	let indent = Infinity;
+	const lines = str.split('\n');
+	for (const line of lines) {
+		if (/^\W*$/m.test(line)) {
+			continue;
+		}
+
+		const match = /^\W*/m.exec(line);
+		if (!match || match[0].length === 0) {
+			continue;
+		}
+
+		indent = Math.min(indent, match[0].length);
+	}
+
+	return lines.map((line) => line.substring(indent)).join('\n');
+}
+
 export default {
 	/**
 	 * Handles the incoming request and determines if it's from curl.
@@ -23,7 +46,15 @@ export default {
 
 			message = await result.text();
 		} else {
-			message = `To install, run:\n\nsh <(curl -L https://init.mattprovost.dev)`;
+			message = dedent(`
+				If on Ubuntu, make sure curl is installed:
+
+				sudo apt update && sudo apt install -yq curl
+
+				To install, run:
+
+				bash <(curl -L https://init.mattprovost.dev)
+			`);
 		}
 
 		return new Response(message, {
