@@ -17,5 +17,5 @@ sudo apt update && sudo apt install -yq curl
 To install, run:
 
 ```sh
-bash <(curl -L https://init.mattprovost.dev)
+bash <(curl https://init.mattprovost.dev)
 ```
