@@ -1,3 +1,6 @@
+/** @type {string} */
+import scriptContent from '../init.sh';
+
 /**
  * @param {string} str
  * @returns {string}
@@ -11,7 +14,7 @@ function dedent(str) {
 		}
 
 		const match = /^\W*/m.exec(line);
-		if (!match || match[0].length === 0) {
+		if (!match) {
 			continue;
 		}
 
@@ -34,17 +37,7 @@ export default {
 		/** @type {string} */
 		let message;
 		if (isCurl) {
-			const result = await fetch('https://raw.githubusercontent.com/BSFishy/init.sh/refs/heads/main/init.sh');
-			if (!result.ok) {
-				return new Response('failed to fetch script', {
-					status: 500,
-					headers: {
-						'Content-Type': 'text/plain',
-					},
-				});
-			}
-
-			message = await result.text();
+			message = scriptContent;
 		} else {
 			message = dedent(`
 				If on Ubuntu, make sure curl is installed:
