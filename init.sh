@@ -34,8 +34,8 @@ backup_existing_resources() {
 install_package() {
 	local program="$1"
 	if command -v apt >/dev/null 2>&1; then
-		sudo apt update -q
-		sudo apt install --no-install-recommends -yq "$program"
+		sudo DEBIAN_FRONTEND=noninteractive apt update -q
+		sudo DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends -yq "$program"
 	else
 		echo "$program not found. please install it and run again."
 		exit 1
