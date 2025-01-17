@@ -94,11 +94,7 @@ EOF
 
 	# install home manager
 	nix-shell '<home-manager>' -A install
-fi
-
-if [ ! -f "/bin/zsh" ]; then
-	install_package "zsh"
-	sudo chsh -s /bin/zsh "$USER"
+	sudo chsh -s "$HOME/.nix-profile/bin/zsh" "$USER"
 fi
 
 if [ ! -d "$HOME/.config/nvim" ]; then
