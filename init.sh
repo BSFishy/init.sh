@@ -31,16 +31,21 @@ backup_existing_resources() {
 	done
 }
 
+install_package() {
+	local program="$1"
+	if command -v apt >/dev/null 2>&1; then
+		sudo apt update -q
+		sudo apt install --no-install-recommends -yq "$program"
+	else
+		echo "$program not found. please install it and run again."
+		exit 1
+	fi
+}
+
 ensure_installed() {
 	local program="$1"
 	if ! command -v "$program" >/dev/null 2>&1; then
-		if command -v apt >/dev/null 2>&1; then
-			sudo apt update -q
-			sudo apt install --no-install-recommends -yq "$program"
-		else
-			echo "curl not found. please install it and run again."
-			exit 1
-		fi
+		install_package "$program"
 	fi
 }
 
@@ -49,7 +54,7 @@ if ! command -v nix >/dev/null 2>&1; then
 	ensure_installed "curl"
 
 	# run the Determinate Systems Nix installer
-	if curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install; then
+	if curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm; then
 		echo "Nix installation completed successfully."
 		. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 	else
@@ -92,7 +97,7 @@ EOF
 fi
 
 if [ ! -f "/bin/zsh" ]; then
-	ensure_installed "zsh"
+	install_package "zsh"
 	sudo chsh -s /bin/zsh "$USER"
 fi
 
