@@ -52,6 +52,7 @@ ensure_installed() {
 if ! command -v nix >/dev/null 2>&1; then
 	print_step "installing nix"
 	ensure_installed "curl"
+	ensure_installed "ca-certificates"
 
 	# run the Determinate Systems Nix installer
 	if curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm; then
@@ -70,31 +71,11 @@ if ! command -v home-manager >/dev/null 2>&1; then
 	# backup existing stuff for initial home manager installation
 	backup_existing_resources
 
-	# add home manager channel
-	nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-	nix-channel --update
-
-	# add home manager configuration
-	mkdir -p ~/.config/home-manager
-	git clone https://github.com/BSFishy/home.nix.git ~/.config/home-manager
-	cat >~/.config/home-manager/home.nix <<EOF
-{ config, pkgs, ... }:
-
-{
-  home.username = "$USER";
-  home.homeDirectory = "$HOME";
-  home.stateVersion = "24.11";
-  imports = [ ./distro.nix ];
-  programs.home-manager.enable = true;
-  home.packages = [
-    pkgs.nix
-  ];
-}
-EOF
+	# add the home manager configuration
+	git clone https://github.com/BSFishy/home.nix.git ~/dotfiles
 
 	# install home manager
-	nix-shell '<home-manager>' -A install
-	sudo chsh -s "$HOME/.nix-profile/bin/zsh" "$USER"
+	nix --extra-experimental-features "nix-command flakes" run home-manager/master -- switch --flake ~/dotfiles#server-linux
 fi
 
 if [ ! -d "$HOME/.config/nvim" ]; then
