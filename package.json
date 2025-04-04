@@ -9,6 +9,6 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"wrangler": "^3.60.3"
+		"wrangler": "^4.7.1"
 	}
 }
