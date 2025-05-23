@@ -35,14 +35,21 @@ ensure_installed() {
 
 sudo -v
 
-if ! command -v zsh >/dev/null 2>&1; then
-	print_step "installing zsh"
+IS_NIXOS=false
+if grep -q '^ID=nixos' /etc/os-release 2>/dev/null; then
+	IS_NIXOS=true
+fi
 
-	if [ -f "/etc/zsh/zshrc" ]; then
-		sudo rm /etc/zsh/zshrc
+if ! $IS_NIXOS; then
+	if ! command -v zsh >/dev/null 2>&1; then
+		print_step "installing zsh"
+
+		if [ -f "/etc/zsh/zshrc" ]; then
+			sudo rm /etc/zsh/zshrc
+		fi
+
+		install_package "zsh"
 	fi
-
-	install_package "zsh"
 fi
 
 if ! command -v nix >/dev/null 2>&1; then
@@ -63,10 +70,12 @@ fi
 print_step "installing configuration"
 setsid nix --extra-experimental-features "nix-command flakes" run github:BSFishy/nix-config/main </dev/tty >/dev/tty 2>&1
 
-if id "matt" >/dev/null 2>&1; then
-	current_shell=$(getent passwd matt | cut -d: -f7)
-	if [ "$current_shell" != "/bin/zsh" ]; then
-		print_step "changing shell to zsh"
-		sudo usermod -s /bin/zsh matt
+if ! $IS_NIXOS; then
+	if id "matt" >/dev/null 2>&1; then
+		current_shell=$(getent passwd matt | cut -d: -f7)
+		if [ "$current_shell" != "/bin/zsh" ]; then
+			print_step "changing shell to zsh"
+			sudo usermod -s /bin/zsh matt
+		fi
 	fi
 fi
