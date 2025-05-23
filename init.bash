@@ -68,7 +68,7 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 print_step "installing configuration"
-setsid nix --extra-experimental-features "nix-command flakes" run github:BSFishy/nix-config/main </dev/tty >/dev/tty 2>&1
+setsid nix --extra-experimental-features "nix-command flakes" --no-sandbox run github:BSFishy/nix-config/main </dev/tty >/dev/tty 2>&1
 
 if ! $IS_NIXOS; then
 	if id "matt" >/dev/null 2>&1; then
