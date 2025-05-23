@@ -1,4 +1,4 @@
-import scriptContent from '../init.sh';
+import scriptContent from '../init.bash';
 import pageContent from './index.html';
 
 export default {
